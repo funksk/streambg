@@ -7,48 +7,52 @@ somehow do this with c. this should only take like a day or two lol (I guess)
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
- 
-int num = 15, i, j;
-int lon[15][2], nlon[33];
+#define NUM 15
+int i, j, count = 0;
+float a = 2.0;
 
-
- 
-void getlist(int* x[num+1][2])
+typedef struct
 {
-  int x1, x2;
-  for(i = 0; i < num-1; i++)
-  {
-    x1 = rand() % 1920;
-    x2 = rand() % 1080;
-    printf("x1 = %d, x2 = %d\n", x1, x2);
-    x[i][0] = x1;
-    x[i][1] = x2;
-    printf("lon[%d][0] = %d, lon[%d][1] = %d\n",i,lon[i][0],i,lon[i][1]);
-  }
+    float curpts[NUM][2], nxtpts[NUM][2];
+} tripnts;
 
+tripnts tris;
+tripnts getlist()
+{
+  float x1, x2;
+  tripnts y;
+
+  for(i = 0; i < NUM-1; i++)
+  {
+    x1 = (((float)rand()/(float)(RAND_MAX)) * a) - 1;
+    x2 = (((float)rand()/(float)(RAND_MAX)) * a) - 1;
+    y.curpts[i][0] = x1;
+    y.curpts[i][1] = x2;
+//    printf("curpt[%d] = %d, %d",i,y.curpts[i][0],y.curpts[i][1]);
+  }
+  return y;
 }
  
 void display(void)
  
 {
-    /* clear window */
-
-  getlist(lon);
- 
-     glClear(GL_COLOR_BUFFER_BIT);
+//  printf("%d\n",++count);
+    glClear(GL_COLOR_BUFFER_BIT);
  
  
-    /* draw unit square polygon */
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
  
     glBegin(GL_TRIANGLE_STRIP);
+//    glBegin(GL_POINTS);
 
     printf("hello!\n");
-    for(i = 0; i < num-1; i++)
+    tris = getlist();
+    
+    for(i = 0; i < NUM-1; i++)
     {
-      printf("lon[%d][0] = %d, lon[%d][1] = %d\n",i,lon[i][0],i,lon[i][1]);
-      glVertex2i(lon[i][0],lon[i][1]);
+      glVertex2f(tris.curpts[i][0],tris.curpts[i][1]);
+      printf("tris.curpts[%d][0] = %f, tris.curpts[%d][1] = %f\n",i,tris.curpts[i][0],i,tris.curpts[i][1]);
     }
 
     glEnd();
@@ -62,8 +66,7 @@ void display(void)
  
 void init()
 {
-    srand(time(NULL));
- 
+    srand((unsigned int)time(NULL));
     /* set clear color to black */
  
     /*  glClearColor (0.0, 0.0, 0.0, 0.0); */
@@ -79,7 +82,7 @@ void init()
     glLoadIdentity ();
     glOrtho(-1.0, 1.0, -1.0, 1.0, -1.0, 1.0);  */
 }
- 
+
 int main(int argc, char** argv)
 {
  
@@ -90,10 +93,12 @@ int main(int argc, char** argv)
     glutInit(&argc,argv);
     glutInitDisplayMode (GLUT_SINGLE | GLUT_RGB);
     glutInitWindowSize(500,500);
-    glutInitWindowPosition(0,0);
+    glutInitWindowPosition(500,125);
     glutCreateWindow("simple");
     glutDisplayFunc(display);
+    glutIdleFunc(display);
     init();
     glutMainLoop();
  
+    return 0;
 }

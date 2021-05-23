@@ -13,10 +13,10 @@ void display(void)
     /* draw unit square polygon */
  
     glBegin(GL_POLYGON);
-        glVertex2f(-0.5, -0.5);
-        glVertex2f(-0.5, 0.5);
-        glVertex2f(0.5, 0.5);
-        glVertex2f(0.5, -0.5);
+        glVertex2f(-1, -1);
+        glVertex2f(-1, 1);
+        glVertex2f(1, 1);
+        glVertex2f(1, -1);
     glEnd();
  
     /* flush GL buffers */
