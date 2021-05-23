@@ -1,22 +1,31 @@
+/*
+TODO
+make coordinate system that will generate a bunch of random triangles.
+somehow do this with c. this should only take like a day or two lol (I guess)
+*/
 #include <GL/freeglut.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
  
-int trisx3 = 15;
+int num = 15, i, j;
 int lon[15][2], nlon[33];
-int i, j;
 
 
  
-void getlist(int* x[trisx3][2])
+void getlist(int* x[num+1][2])
 {
-  for(i = 0; i < trisx3-1; i++)
+  int x1, x2;
+  for(i = 0; i < num-1; i++)
   {
-    x[i][0] = rand() % 1920;
-    x[i][1] = rand() % 1080;
+    x1 = rand() % 1920;
+    x2 = rand() % 1080;
+    printf("x1 = %d, x2 = %d\n", x1, x2);
+    x[i][0] = x1;
+    x[i][1] = x2;
     printf("lon[%d][0] = %d, lon[%d][1] = %d\n",i,lon[i][0],i,lon[i][1]);
   }
+
 }
  
 void display(void)
@@ -36,7 +45,7 @@ void display(void)
     glBegin(GL_TRIANGLE_STRIP);
 
     printf("hello!\n");
-    for(i = 0; i < trisx3; i++)
+    for(i = 0; i < num-1; i++)
     {
       printf("lon[%d][0] = %d, lon[%d][1] = %d\n",i,lon[i][0],i,lon[i][1]);
       glVertex2i(lon[i][0],lon[i][1]);
