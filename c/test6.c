@@ -95,6 +95,7 @@ void drawbox(float x[4])
 
 tripnts inc(tripnts c, tripnts n, tripnts w)
 {
+  FILE *f = fopen("debug.txt", "w");
   float ut;
   tripnts ret;
   for(i = 0;i<=3;i++)
@@ -113,7 +114,9 @@ tripnts inc(tripnts c, tripnts n, tripnts w)
         }
         printf("ret.lof[%d][%d][%d] = %f\n",i,j,k,ret.lof[i][j][k]);
         if(debugf)
-          printf("ret.lof[%d][%d][%d] = %f\n",i,j,k,ret.lof[i][j][k]);
+        {
+          fprintf(f, "ret.lof[%d][%d][%d] = %f\n",i,j,k,ret.lof[i][j][k]);
+        }
       }
   return ret;
 }
@@ -169,9 +172,6 @@ void init()
     getxy(inbox[0],inbox[1], flbox);
     cur = getlist(flbox);
     next = getlist(flbox);
-    if(debugf)
-      FILE *f = fopen("debug.txt", "w");
-
 }
 
 
