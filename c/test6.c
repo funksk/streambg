@@ -17,6 +17,7 @@ maybe swap it around? idk.
 //consts
 #define NUM 9    //number of triangles you want in each quadrant*3 (must be multiple of 3 to work right)
 const unsigned int drwbx = 1;
+const unsigned int debugf = 1;
 const int t = 60*10;
 const int dt = 0;
 const int fps = 30;
@@ -96,7 +97,7 @@ tripnts inc(tripnts c, tripnts n, tripnts w)
 {
   float ut;
   tripnts ret;
-  for(i = 0;i<=sizeof(w);i++)
+  for(i = 0;i<=3;i++)
     for(j = 0;j<=NUM-1;j++)
       for(k = 0;k<=1;k++)
       {
@@ -111,6 +112,8 @@ tripnts inc(tripnts c, tripnts n, tripnts w)
           ret.lof[i][j][k] = w.lof[i][j][k]+(ut/uplimf);
         }
         printf("ret.lof[%d][%d][%d] = %f\n",i,j,k,ret.lof[i][j][k]);
+        if(debugf)
+          printf("ret.lof[%d][%d][%d] = %f\n",i,j,k,ret.lof[i][j][k]);
       }
   return ret;
 }
@@ -166,8 +169,11 @@ void init()
     getxy(inbox[0],inbox[1], flbox);
     cur = getlist(flbox);
     next = getlist(flbox);
+    if(debugf)
+      FILE *f = fopen("debug.txt", "w");
 
 }
+
 
 //****************MAIN*******************
 int main(int argc, char** argv)
