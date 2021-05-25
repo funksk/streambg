@@ -93,6 +93,12 @@ void drawbox(float x[4])
   glVertex2f(x[2],x[1]);
 }
 
+//we can do a little hacking here.
+//just look at what our initial value is, 
+//compare to the other value
+//see what fucked up. change the clock speed n shit
+//be an engineer, retard!
+
 tripnts inc(tripnts c, tripnts n, tripnts w)
 {
   FILE *f = fopen("debug.txt", "w");
@@ -105,12 +111,12 @@ tripnts inc(tripnts c, tripnts n, tripnts w)
         if(n.lof[i][j][k]>w.lof[i][j][k])
         {
           ut = n.lof[i][j][k] - c.lof[i][j][k];
-          ret.lof[i][j][k] = w.lof[i][j][k]+(ut/uplimf);
+          ret.lof[i][j][k] = w.lof[i][j][k]+(ut/(float)uplimf);
         }
         else if(n.lof[i][j][k]<w.lof[i][j][k])
         {
           ut = c.lof[i][j][k] - n.lof[i][j][k];
-          ret.lof[i][j][k] = w.lof[i][j][k]+(ut/uplimf);
+          ret.lof[i][j][k] = w.lof[i][j][k]+(ut/(float)uplimf);
         }
         printf("ret.lof[%d][%d][%d] = %f\n",i,j,k,ret.lof[i][j][k]);
         if(debugf)
