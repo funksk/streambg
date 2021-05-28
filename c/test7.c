@@ -1,12 +1,11 @@
 /*
 TODO
-make coordinate system that will generate a bunch of random triangles.
-somehow do this with c. this should only take like a day or two lol (I guess)
+okay, we're essensially at the point where we were in the python program.
+now we need to just add the auto-frame maker and maybe the facecam window.
 
-we can then code the move between function, then put it all together :)
+now, we need a function that makes it randomize the numbers, but in a way that
+isn't shit. I have to find an algorithm online or something like that. IDK
 
-the inc function is busted. it has to do with the order of the array. 
-maybe swap it around? idk.
 */
 #include <GL/freeglut.h>
 #include <stdio.h>
@@ -16,8 +15,9 @@ maybe swap it around? idk.
 
 //********DECLARATIONS****************
 //consts
-#define NUM 9    //number of triangles you want in each quadrant*3 (must be multiple of 3 to work right)
+#define NUM 33-2    //number of triangles you want in each quadrant*3 (must be multiple of 3 to work right)
 const unsigned int drwbx = 1;
+const unsigned int drwfrm = 0;
 const unsigned int debugf = 0;
 const int t = 60*10;
 const int dt = 0;
@@ -25,7 +25,7 @@ const int fps = 30;
 const int uplims = 10*60; //upper limit in seconds... this is not seconds idk
 const int uplimf = fps*uplims;
 const int resol[2] = {1280, 720};
-const int inbox[2] = {900, 400};
+const int inbox[2] = {800, 600};
 const float a = 2.0;
 
 //variables
@@ -40,7 +40,13 @@ typedef struct
     float lof[4][NUM][2]; //0 = left, 1 = bottom, 2 = top, 3 = right
 } tripnts;
 
+typedef struct 
+{
+  float pts[4][4];
+} frame;
+
 tripnts cur, next, work;
+frame frm, xylims;
 
 //*************FUNCTIONS*********************
 
@@ -65,22 +71,41 @@ void getxy(int x, int y, float a[])
 //  printf("x1 = %f, y1 = %f\n",a[0],a[1]);
 }
 
-tripnts getlist(float a[])
+frame getlims(float a[])
+{
+  frame x;
+    x.pts[0][0] = -1.1;
+    x.pts[0][1] = a[2]+0.1;
+    x.pts[0][2] = -1.1;
+    x.pts[0][3] = 1.1;
+    x.pts[1][0] = -1.2;//bottom x
+    x.pts[1][1] = 1.2;
+    x.pts[1][2] = -1.1;
+    x.pts[1][3] = a[3]+0.1;
+    x.pts[2][0] = a[0]-0.1;
+    x.pts[2][1] = 1.1;
+    x.pts[2][2] = -1.1;
+    x.pts[2][3] = 1.1;
+    x.pts[3][0] = -1.2;
+    x.pts[3][1] = 1.2;
+    x.pts[3][2] = a[1]-0.1;
+    x.pts[3][3] = 1.1;
+  return x;
+}
+
+tripnts getlist(frame x)
 {
   tripnts y;
   for(i = 0; i < NUM-1; i++)  //0 = x, 1 = y
-  { //formula: total area of range - low offset
-    //so if we wanted -1.1 to 0.9, we would generate a random
-    //number from 0.0-0.2, then subtract 1.1.
-    //-100 to 
-    y.lof[0][i][0] = randfloat(-1.1,a[2]+0.1);//left x
-    y.lof[0][i][1] = randfloat(-1.1,1.1);//left y
-    y.lof[1][i][0] = randfloat(-1.2,1.2);//bottom x
-    y.lof[1][i][1] = randfloat(-1.1,a[3]+0.1);//bottom y
-    y.lof[2][i][0] = randfloat(a[0]-0.1,1.1);//right x
-    y.lof[2][i][1] = randfloat(-1.1,1.1);//right y
-    y.lof[3][i][0] = randfloat(-1.2,1.2);//top x
-    y.lof[3][i][1] = randfloat(a[1]-0.1,1.1);//top y
+  { 
+    y.lof[0][i][0] = randfloat(x.pts[0][0],x.pts[0][1]);//left x
+    y.lof[0][i][1] = randfloat(x.pts[0][2],x.pts[0][3]);//left y
+    y.lof[1][i][0] = randfloat(x.pts[1][0],x.pts[1][1]);//bottom x
+    y.lof[1][i][1] = randfloat(x.pts[1][2],x.pts[1][3]);//bottom y
+    y.lof[2][i][0] = randfloat(x.pts[2][0],x.pts[2][1]);//right x
+    y.lof[2][i][1] = randfloat(x.pts[2][2],x.pts[2][3]);//right y
+    y.lof[3][i][0] = randfloat(x.pts[3][0],x.pts[3][1]);//top x
+    y.lof[3][i][1] = randfloat(x.pts[3][2],x.pts[3][3]);//top y
 //    printf("y.lof[0][%d][0] = %f \r", j, y.lof[0][j][0]);
 //    sleep(5);
 //    printf("%f, %f, %f, %f, %f, %f, %f, %f\n", y.lof[0][i][0], y.lof[0][i][1], y.lof[1][i][0], y.lof[1][i][1], y.lof[2][i][0], y.lof[2][i][1], y.lof[3][i][0], y.lof[3][i][1]);
@@ -90,7 +115,67 @@ tripnts getlist(float a[])
   printf("\n");
   return y;
 }
+
+tripnts randlist(frame x, tripts y)
+{
+  tripnts y;
+  for(i = 0; i < NUM-1;i++)
+  {
+    do
+    {
+    y.lof[0][i][0] = randfloat(-1.1,a[2]+0.1);//left x
+    y.lof[0][i][1] = randfloat(-1.1,1.1);//left y
+    y.lof[1][i][0] = randfloat(-1.2,1.2);//bottom x
+    y.lof[1][i][1] = randfloat(-1.1,a[3]+0.1);//bottom y
+    y.lof[2][i][0] = randfloat(a[0]-0.1,1.1);//right x
+    y.lof[2][i][1] = randfloat(-1.1,1.1);//right y
+    y.lof[3][i][0] = randfloat(-1.2,1.2);//top x
+    y.lof[3][i][1] = randfloat(a[1]-0.1,1.1);//top y
+    }while
+    (y.lof[0][i][0] > a[2]+0.1);
+  }
+  return y;
+}
  
+frame frmmkr(float tls[4], float x)
+{
+  frame tmp;
+  //left
+  tmp.pts[0][0] = tls[0]-x;
+  tmp.pts[0][1] = tls[1]+x;
+  tmp.pts[0][2] = tls[0];
+  tmp.pts[0][3] = tls[3]-x;
+  //top
+  tmp.pts[1][0] = tls[0]-x;
+  tmp.pts[1][1] = tls[1]+x;
+  tmp.pts[1][2] = tls[2]+x;
+  tmp.pts[1][3] = tls[1];
+  //right
+  tmp.pts[2][0] = tls[2];
+  tmp.pts[2][1] = tls[1]+x;
+  tmp.pts[2][2] = tls[2]+x;
+  tmp.pts[2][3] = tls[3]-x;
+  //bottom
+  tmp.pts[3][0] = tls[0]-x;
+  tmp.pts[3][1] = tls[3];
+  tmp.pts[3][2] = tls[2]+x;
+  tmp.pts[3][3] = tls[3]-x;
+  return tmp;
+}
+
+void drawframe(frame tmp)
+{
+  for(i = 0; i<=3; i++)
+  {
+    glVertex2f(tmp.pts[i][0],tmp.pts[i][1]);       //top left
+    glVertex2f(tmp.pts[i][2],tmp.pts[i][3]);
+    glVertex2f(tmp.pts[i][0],tmp.pts[i][3]);
+    glVertex2f(tmp.pts[i][0],tmp.pts[i][1]);
+    glVertex2f(tmp.pts[i][2],tmp.pts[i][3]);
+    glVertex2f(tmp.pts[i][2],tmp.pts[i][1]);
+  }
+}
+
 void drawbox(float x[4])
 {
 //  printf("I am drawbox. destroyer of consoles\n");
@@ -102,11 +187,7 @@ void drawbox(float x[4])
   glVertex2f(x[2],x[1]);
 }
 
-//we can do a little hacking here.
-//just look at what our initial value is, 
-//compare to the other value
-//see what fucked up. change the clock speed n shit
-//be an engineer, retard!
+
 
 tripnts inc(tripnts c, tripnts n, tripnts w)
 {
@@ -128,8 +209,8 @@ tripnts inc(tripnts c, tripnts n, tripnts w)
           ut = c.lof[i][j][k] - n.lof[i][j][k];
           ret.lof[i][j][k] = w.lof[i][j][k]-(ut/uplimf);
         }
-        if(i == 0 && j == 0 && k == 0)
-          printf("ut = %f\n",ut);
+//        if(i == 0 && j == 0 && k == 0)
+//          printf("ut = %f\n",ut);
         /*
         printf("ret.lof[%d][%d][%d] = %f\n",i,j,k,ret.lof[i][j][k]);
         if(debugf)
@@ -153,13 +234,14 @@ void display(void)
   {
     work = next;
     cur = next;
-    next = getlist(flbox);
+ //   next = getlist(flbox);
+    next = randlist(xylims, cur)
     printf("switched it up, baby\ncur.lof[1][0][0] = %f\nnext.lof[1][0][0] = %f\n\n", cur.lof[1][0][0], next.lof[1][0][0]);
     count = 0;
   }
 //  printf("%d\n",++count);
     glClear(GL_COLOR_BUFFER_BIT);
-  
+
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
  
 //    glBegin(GL_TRIANGLE_STRIP);
@@ -168,8 +250,8 @@ void display(void)
 
  //   printf("hello!\n");
 //    cur = getlist(flbox);
-    if(drwbx)
-      drawbox(flbox);
+
+    glColor3f(0.241, 0.139, 0.61);
 
 //    printf("hello!\n");
     work = inc(cur, next, work);
@@ -182,6 +264,15 @@ void display(void)
         glVertex2f(work.lof[i][j][0],work.lof[i][j][1]);
 //        glVertex2f(1,1);
       }
+
+    if(drwbx)
+    {
+      glColor3f(1,1,1);
+      drawbox(flbox);
+      frm = frmmkr(flbox, 0.01);
+      drawframe(frm);
+    }
+
 
     glEnd();
  
@@ -202,7 +293,8 @@ void init()
 {
     srand((unsigned int)time(NULL));
     getxy(inbox[0],inbox[1], flbox);
-    cur = getlist(flbox);
+    xylims = getlims(flbox);
+    cur = getlist(flbox, xylims);
     next = getlist(flbox);
     printf("cur.lof[0][0][0] = %f\nnext.lof[0][0][0] = %f\n", cur.lof[0][0][0], next.lof[0][0][0]);
     work = cur;

@@ -38,7 +38,7 @@ bx = [800, 600, True]   #resolution of box, then if to show or not
 fccm = [200, 200, False] #resolution of facecam, then to show or not
 count = 0       #current counter of frames
 #uplims = 5*60       #upper limit in seconds
-uplims = 10       #upper limit in seconds
+uplims = 1       #upper limit in seconds
 uplimf = fps*uplims     #upper limit in frames
 frm = True          #frame toggle
 running = False     #to set wlol to lol for the first time
@@ -301,7 +301,7 @@ def on_draw():
     glClear(GL_COLOR_BUFFER_BIT)
     glColor3f(0.241, 0.139, .61)
     #draw only the points
-    #glBegin(GL_POINTS)
+    #glBegin(GL_POINTS)`
     #draw outlines only
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
 

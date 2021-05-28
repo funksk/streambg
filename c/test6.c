@@ -3,10 +3,7 @@ TODO
 make coordinate system that will generate a bunch of random triangles.
 somehow do this with c. this should only take like a day or two lol (I guess)
 
-we can then code the move between function, then put it all together :)
-
-the inc function is busted. it has to do with the order of the array. 
-maybe swap it around? idk.
+this works or something idk lmao
 */
 #include <GL/freeglut.h>
 #include <stdio.h>
@@ -18,6 +15,7 @@ maybe swap it around? idk.
 //consts
 #define NUM 9    //number of triangles you want in each quadrant*3 (must be multiple of 3 to work right)
 const unsigned int drwbx = 1;
+const unsigned int drwfrm = 0;
 const unsigned int debugf = 0;
 const int t = 60*10;
 const int dt = 0;
