@@ -17,17 +17,18 @@ this should take like another day or something.
 
 //********DECLARATIONS****************
 //consts
-#define NUM 21-2    //number of triangles you want in each quadrant*3 (must be multiple of 3 to work right)
+#define NUM 27-2    //number of triangles you want in each quadrant*3 (must be multiple of 3 to work right)
 const unsigned int drwbx = 1;
 const unsigned int drwfrm = 0;
 const unsigned int debugf = 0;
+
 const int t = 60*10;
 const int dt = 0;
 const int fps = 30;
 const int uplims = 10; //upper limit in seconds... this is not seconds idk
 const int uplimf = fps*uplims;
 const int resol[2] = {1280, 720};
-const int inbox[2] = {900, 400};
+const int inbox[2] = {800, 400};
 const float a = 2.0;
 
 //variables
@@ -70,28 +71,100 @@ void getxy(int x, int y, float a[])
   a[1] = (float)y/(float)glutGet(GLUT_WINDOW_HEIGHT); //y1
   a[2] = a[0] * -1; //x2
   a[3] = a[1] * -1; //y2
-//  printf("x1 = %f, y1 = %f\n",a[0],a[1]);
+  printf("%d, %d\n",glutGet(GLUT_WINDOW_WIDTH), glutGet(GLUT_WINDOW_HEIGHT));
+  printf("%d, %d\n", x, y);
+  printf("x1 = %f, y1 = %f, x2 = %f, x3 = %f\n",a[0],a[1],a[2],a[3]);
+  while(1);
+}
+
+//switches for z if:
+//0 = topleft, 1 = midleft, 2 = botleft
+//3 = topmid,  4 = midmid,  5 = botmid
+//6 = topright,7 = midright,8 = botright
+//
+
+void xyjst(int x, int y, int z, float a[])
+{
+  switch(z)
+  {
+    case 0: //topleft
+      a[0] = 1;
+      a[1] = ;
+      a[2] = ;
+      a[3] = ;
+      break;
+    case 1: //midleft
+      a[0] = ;
+      a[1] = ;
+      a[2] = ;
+      a[3] = ;
+      break;
+    case 2: //bottomleft
+      a[0] = ;
+      a[1] = ;
+      a[2] = ;
+      a[3] = ;
+      break;
+    case 3: //top middle
+      a[0] = ;
+      a[1] = ;
+      a[2] = ;
+      a[3] = ;
+      break;
+    case 4: //centered
+      a[0] = (float)x/(float)glutGet(GLUT_WINDOW_WIDTH);  //x1
+      a[1] = (float)y/(float)glutGet(GLUT_WINDOW_HEIGHT); //y1
+      a[2] = a[0] * -1; //x2
+      a[3] = a[1] * -1; //y2
+      break;
+    case 5: //bottom middle
+      a[0] = ;
+      a[1] = ;
+      a[2] = ;
+      a[3] = ;
+      break;
+    case 6: //top right
+      a[0] = ;
+      a[1] = ;
+      a[2] = ;
+      a[3] = ;
+      break;
+    case 7: //middle right
+      a[0] = ;
+      a[1] = ;
+      a[2] = ;
+      a[3] = ;
+      break;
+    case 8: //bottom right
+      a[0] = ;
+      a[1] = ;
+      a[2] = ;
+      a[3] = ;
+      break;
+      printf("x1 = %f, y1 = %f, x2 = %f, x3 = %f\n",a[0],a[1],a[2],a[3]);
+
+  }
 }
 
 frame getlims(float a[])
 {
   frame x;
-    x.pts[0][0] = -1.1;
-    x.pts[0][1] = a[2]+0.1;
-    x.pts[0][2] = -1.1;
-    x.pts[0][3] = 1.1;
-    x.pts[1][0] = -1.2;//bottom x
-    x.pts[1][1] = 1.2;
-    x.pts[1][2] = -1.1;
-    x.pts[1][3] = a[3]+0.1;
-    x.pts[2][0] = a[0]-0.1;
-    x.pts[2][1] = 1.1;
-    x.pts[2][2] = -1.1;
-    x.pts[2][3] = 1.1;
-    x.pts[3][0] = -1.2;
-    x.pts[3][1] = 1.2;
-    x.pts[3][2] = a[1]-0.1;
-    x.pts[3][3] = 1.1;
+  x.pts[0][0] = -1.1;
+  x.pts[0][1] = a[2]+0.1;
+  x.pts[0][2] = -1.1;
+  x.pts[0][3] = 1.1;
+  x.pts[1][0] = -1.2;//bottom x
+  x.pts[1][1] = 1.2;
+  x.pts[1][2] = -1.1;
+  x.pts[1][3] = a[3]+0.1;
+  x.pts[2][0] = a[0]-0.1;
+  x.pts[2][1] = 1.1;
+  x.pts[2][2] = -1.1;
+  x.pts[2][3] = 1.1;
+  x.pts[3][0] = -1.2;
+  x.pts[3][1] = 1.2;
+  x.pts[3][2] = a[1]-0.1;
+  x.pts[3][3] = 1.1;
   return x;
 }
 
@@ -300,7 +373,8 @@ void init()
 {
     f = fopen("debug.txt", "w");
     srand((unsigned int)time(NULL));
-    getxy(inbox[0],inbox[1], flbox);
+    getxy(inbox[0],inbox[1],flbox);
+//    xyjst(inbox[0],inbox[1], 0, flbox);
     xylims = getlims(flbox);
     cur = getlist(xylims);
     next = randlist(xylims, cur);
