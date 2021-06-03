@@ -28,7 +28,7 @@ const int fps = 30;
 const int uplims = 10; //upper limit in seconds... this is not seconds idk
 const int uplimf = fps*uplims;
 const int resol[2] = {1280, 720};
-const int inbox[2] = {800, 400};
+const int inbox[2] = {800, 200};
 const float a = 2.0;
 
 //variables
@@ -85,35 +85,38 @@ void getxy(int x, int y, float a[])
 
 void xyjst(int x, int y, int z, float a[])
 {
+  float xx = (float)x/(float)glutGet(GLUT_WINDOW_WIDTH);
+  float yy = (float)y/(float)glutGet(GLUT_WINDOW_HEIGHT);
   switch(z)
   {
     case 0: //topleft
-      a[0] = 1;
-      a[1] = ;
-      a[2] = ;
-      a[3] = ;
+      a[0] = (xx*(xx+1))-1;
+      a[1] = 1;
+      a[2] = -1;
+      a[3] = (yy*(yy-1))+1;
       break;
+      /*
     case 1: //midleft
       a[0] = ;
       a[1] = ;
-      a[2] = ;
+      a[2] = -1;
       a[3] = ;
       break;
     case 2: //bottomleft
       a[0] = ;
       a[1] = ;
-      a[2] = ;
-      a[3] = ;
+      a[2] = -1;
+      a[3] = -1;
       break;
     case 3: //top middle
       a[0] = ;
-      a[1] = ;
+      a[1] = 1;
       a[2] = ;
       a[3] = ;
       break;
     case 4: //centered
-      a[0] = (float)x/(float)glutGet(GLUT_WINDOW_WIDTH);  //x1
-      a[1] = (float)y/(float)glutGet(GLUT_WINDOW_HEIGHT); //y1
+      a[0] = xx;  //x1
+      a[1] = yy; //y1
       a[2] = a[0] * -1; //x2
       a[3] = a[1] * -1; //y2
       break;
@@ -121,16 +124,16 @@ void xyjst(int x, int y, int z, float a[])
       a[0] = ;
       a[1] = ;
       a[2] = ;
-      a[3] = ;
+      a[3] = -1;
       break;
     case 6: //top right
-      a[0] = ;
-      a[1] = ;
+      a[0] = 1;
+      a[1] = 1;
       a[2] = ;
       a[3] = ;
       break;
     case 7: //middle right
-      a[0] = ;
+      a[0] = 1;
       a[1] = ;
       a[2] = ;
       a[3] = ;
@@ -139,8 +142,8 @@ void xyjst(int x, int y, int z, float a[])
       a[0] = ;
       a[1] = ;
       a[2] = ;
-      a[3] = ;
-      break;
+      a[3] = -1;
+      break;*/
       printf("x1 = %f, y1 = %f, x2 = %f, x3 = %f\n",a[0],a[1],a[2],a[3]);
 
   }
@@ -341,8 +344,8 @@ void display(void)
     for(i = 0; i <= 3; i++)
       for(j = 0; j < NUM-1; j++)
       {
-        glVertex2f(work.lof[i][j][0],work.lof[i][j][1]);
-//        glVertex2f(1,1);
+//        glVertex2f(work.lof[i][j][0],work.lof[i][j][1]);
+        glVertex2f(1,1);
       }
 
     if(drwbx)
@@ -373,8 +376,8 @@ void init()
 {
     f = fopen("debug.txt", "w");
     srand((unsigned int)time(NULL));
-    getxy(inbox[0],inbox[1],flbox);
-//    xyjst(inbox[0],inbox[1], 0, flbox);
+//    getxy(inbox[0],inbox[1],flbox);
+    xyjst(inbox[0],inbox[1], 0, flbox);
     xylims = getlims(flbox);
     cur = getlist(xylims);
     next = randlist(xylims, cur);
