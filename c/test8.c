@@ -57,6 +57,7 @@ frame frm, xylims;
 //think of a bucket, where you start at the number low
 //and fill it till high. the number could be anywhere
 //inbetween those numbers.
+//...might have stolen from the internets. oh well!
 float randfloat(float Min, float Max)
 {
   return (((float)rand() / (float)RAND_MAX) * (Max - Min)) + Min;
@@ -89,13 +90,14 @@ void xyjst(int x, int y, int z, float a[])
   float yy = (float)y/(float)glutGet(GLUT_WINDOW_HEIGHT);
   switch(z)
   {
+    /*
     case 0: //topleft
       a[0] = (xx*(xx+1))-1;
       a[1] = 1;
       a[2] = -1;
       a[3] = (yy*(yy-1))+1;
       break;
-      /*
+      
     case 1: //midleft
       a[0] = ;
       a[1] = ;
@@ -114,12 +116,14 @@ void xyjst(int x, int y, int z, float a[])
       a[2] = ;
       a[3] = ;
       break;
+      */
     case 4: //centered
       a[0] = xx;  //x1
       a[1] = yy; //y1
       a[2] = a[0] * -1; //x2
       a[3] = a[1] * -1; //y2
       break;
+      /*
     case 5: //bottom middle
       a[0] = ;
       a[1] = ;
@@ -149,6 +153,7 @@ void xyjst(int x, int y, int z, float a[])
   }
 }
 
+//these values can change. this code is indecipherable lol
 frame getlims(float a[])
 {
   frame x;
@@ -358,7 +363,7 @@ void display(void)
 
 
     glEnd();
- 
+  
     /* flush GL buffers */
 
     glFlush();
@@ -369,6 +374,19 @@ void Timer(int x)
 {
   display();
   glutTimerFunc((float)(1/fps), Timer, 0);
+}
+
+
+
+//keyboard in
+keyin(int key,int x,int y)
+{
+  switch(key)
+  {
+    case GLUT_KEY_UP:
+      
+  }
+
 }
  
  //*****INIT*****
@@ -398,10 +416,11 @@ int main(int argc, char** argv)
     glutInitDisplayMode (GLUT_SINGLE | GLUT_RGB);
     glutInitWindowSize(resol[0],resol[1]);
     glutInitWindowPosition(0,0);
-    glutCreateWindow("simple");
+    glutCreateWindow("some typa program");
     init();
     glutDisplayFunc(display);
     glutTimerFunc(0, Timer, 0);
+    glutSpecialFunc(keyin);
     glutMainLoop();
  
     return 0;
