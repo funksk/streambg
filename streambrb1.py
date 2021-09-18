@@ -59,8 +59,8 @@ def getlist(time):
         ty.append(random.triangular(win.height-150,win.height+100))
         rx.append(random.triangular(win.width-350,win.width+100))
         ry.append(random.triangular(-100,win.height+100))
-        print('midst', len(lx),len(ly),len(bx),len(by),len(tx),len(ty),len(rx),len(ry))
-        print(lx)
+        #print('midst', len(lx),len(ly),len(bx),len(by),len(tx),len(ty),len(rx),len(ry))
+       # print(lx)
     #print(lx,ly,bx,by,tx,ty,rx,ry)
     butts = [lx,ly,bx,by,tx,ty,rx,ry]
     return butts
@@ -88,6 +88,7 @@ def udate(x):
     global label
     #print('I was ', running)
     if running == False:
+        print("what")
         running = True
         wlol=copy.deepcopy(lol)     #who thought this was a good idea
         print(f'lol = {lol}\nwlol = {wlol}')
@@ -144,6 +145,7 @@ def on_draw():
 
 lol = getlist(t)
 nlol = getlist(t)
+wlol=copy.deepcopy(lol)     #who thought this was a good idea
 pyglet.clock.schedule_interval(udate, 1/fps)
 pyglet.app.run()
 

@@ -19,16 +19,17 @@ this should take like another day or something.
 //consts
 #define NUM 27-2    //number of triangles you want in each quadrant*3 (must be multiple of 3 to work right)
 const unsigned int drwbx = 1;
+const unsigned int movbx = 0;
 const unsigned int drwfrm = 0;
-const unsigned int debugf = 0;
+const unsigned int drwlns = 1;
 
 const int t = 60*10;
 const int dt = 0;
 const int fps = 30;
 const int uplims = 10; //upper limit in seconds... this is not seconds idk
 const int uplimf = fps*uplims;
-const int resol[2] = {1280, 720};
-const int inbox[2] = {800, 200};
+const int resol[2] = {1920, 1080};
+const int inbox[2] = {1024, 768};
 const float a = 2.0;
 
 //variables
@@ -75,7 +76,7 @@ void getxy(int x, int y, float a[])
   printf("%d, %d\n",glutGet(GLUT_WINDOW_WIDTH), glutGet(GLUT_WINDOW_HEIGHT));
   printf("%d, %d\n", x, y);
   printf("x1 = %f, y1 = %f, x2 = %f, x3 = %f\n",a[0],a[1],a[2],a[3]);
-  while(1);
+//  while(1);
 }
 
 //switches for z if:
@@ -317,7 +318,7 @@ tripnts inc(tripnts c, tripnts n, tripnts w)
 void display(void)
 {
 //  printf("henlo :3\n");
-  count+=1;
+  if (drwlns)  count+=1;
   if(count == uplimf)
   {
     work = next;
@@ -327,6 +328,7 @@ void display(void)
     printf("switched it up, baby\ncur.lof[1][0][0] = %f\nnext.lof[1][0][0] = %f\n\n", cur.lof[1][0][0], next.lof[1][0][0]);
     count = 0;
   }
+
 //  printf("%d\n",++count);
     glClear(GL_COLOR_BUFFER_BIT);
 
@@ -337,29 +339,32 @@ void display(void)
 //    glBegin(GL_POINTS);
 
  //   printf("hello!\n");
-//    cur = getlist(flbox);
 
     glColor3f(0.241, 0.139, 0.61);
 
 //    printf("hello!\n");
-    work = inc(cur, next, work);
+    if (drwlns) work = inc(cur, next, work);
 //    printf("goodbye!\n");
 //    printf("work.lof[0][0][0] = %f \r", work.lof[0][0][0]);
-    printf("cur.lof[1][0][0] = %f, next.lof[1][0][0] = %f, work.lof[1][0][0] = %f\n",cur.lof[1][0][0], next.lof[1][0][0], work.lof[1][0][0]);
+    if (drwlns) printf("cur.lof[1][0][0] = %f, next.lof[1][0][0] = %f, work.lof[1][0][0] = %f\n",cur.lof[1][0][0], next.lof[1][0][0], work.lof[1][0][0]);
     for(i = 0; i <= 3; i++)
       for(j = 0; j < NUM-1; j++)
       {
-//        glVertex2f(work.lof[i][j][0],work.lof[i][j][1]);
-        glVertex2f(1,1);
+        if (drwlns) glVertex2f(work.lof[i][j][0],work.lof[i][j][1]);
+//        glVertex2f(1,1);
       }
 
     if(drwbx)
     {
       glColor3f(1,1,1);
       drawbox(flbox);
-      frm = frmmkr(flbox, 0.01);
-      drawframe(frm);
+      if (drwfrm)
+      {
+        frm = frmmkr(flbox, 0.01);
+        drawframe(frm);
+      }
     }
+
 
 
     glEnd();
@@ -367,6 +372,8 @@ void display(void)
     /* flush GL buffers */
 
     glFlush();
+//    glutPostRedisplay();
+//    glutSwapBuffers();
  
 }
 
@@ -379,23 +386,39 @@ void Timer(int x)
 
 
 //keyboard in
-keyin(int key,int x,int y)
+void keyin(int key,int x,int y)
 {
+  float mvamnt = 0.01;
   switch(key)
   {
     case GLUT_KEY_UP:
-      
+      flbox[1]+=mvamnt;
+      flbox[3]+=mvamnt;
+      break;
+    case GLUT_KEY_RIGHT:
+      flbox[0]+=mvamnt;
+      flbox[2]+=mvamnt;
+      break;
+    case GLUT_KEY_DOWN:
+      flbox[1]-=mvamnt;
+      flbox[3]-=mvamnt;
+      break;
+    case GLUT_KEY_LEFT:
+      flbox[0]-=mvamnt;
+      flbox[2]-=mvamnt;
+      break;
   }
-
+  printf("x1 = %f, y1 = %f, x2 = %f, x3 = %f\n",flbox[0],flbox[1],flbox[2],flbox[3]);
 }
  
+
  //*****INIT*****
 void init()
 {
     f = fopen("debug.txt", "w");
     srand((unsigned int)time(NULL));
-//    getxy(inbox[0],inbox[1],flbox);
-    xyjst(inbox[0],inbox[1], 0, flbox);
+    getxy(inbox[0],inbox[1],flbox);
+//    xyjst(inbox[0],inbox[1], 0, flbox);
     xylims = getlims(flbox);
     cur = getlist(xylims);
     next = randlist(xylims, cur);
@@ -420,7 +443,7 @@ int main(int argc, char** argv)
     init();
     glutDisplayFunc(display);
     glutTimerFunc(0, Timer, 0);
-    glutSpecialFunc(keyin);
+    if(movbx) glutSpecialFunc(keyin);
     glutMainLoop();
  
     return 0;
