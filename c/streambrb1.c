@@ -8,12 +8,15 @@ now all that I need to do is justify the screen to some side of the screen,
 make a frame maker for the facecam, and a box for the chat.
 this should take like another day or something.
 
+
+cur task: putchar shit
 */
 #include <GL/freeglut.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 #include <unistd.h>
+#include <string.h>
 
 //********DECLARATIONS****************
 //consts
@@ -187,6 +190,71 @@ tripnts inc(tripnts c, tripnts n, tripnts w)
   return ret;
 }
 
+//put a char on the glut screen!!! (i needed to find the glRasterPos2f for like 4 months)
+void GLUTputc(int x, int y, char c)
+{
+    glRasterPos2f(x, y);
+    glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, c);
+}
+
+
+//this starts in the center, get strlen, each char in the 
+//str has a box, and with this a set amount of space. 
+//this depends on the font size, but whatever.
+//the real idea is, take half of the str, sub
+//the amount of boxes, and draw them at random
+//locales in the boxes.
+
+
+//bro I need a pixel to float function (for every window size). like fuck this math shit.
+
+//each char in the string holds a weight in the y and (especially) x.
+//we need to do some math in the putc to put each car specifically in the box
+//we want it to be in. this kinda sucks!!!
+//(it would be a cool effect if they overlapped at some point)
+void putrand(char* x)
+{
+  int i, len = strlen(x);
+  float boxamnt[2] = {0.06,0.06}; //oh my jesus I should be able to do this % math but fuck
+  for(i = 0;i<len;i++)
+    GLUTputc(randfloat(,),,x[i]); //holy fucking christ this has to be a float XDXDXD
+}
+
+//gets a number from the time, randomizes it, whatever
+//it gets switches to a random str, then prints the
+//random str at a random location on xy within
+//bounds
+void randdel()  //random delegation
+{
+  switch(rand() % 7)
+  {
+    case(0):
+      putrand("Be right back!");
+      break;
+    case(1):
+      putrand("Hope you didn't wait too long!!");
+      break;
+    case(2):
+      putrand("brb");
+      break;
+    case(3):
+      putrand("brb xoxo");
+      break;
+    /*case():
+      putrand("");
+      break;
+    case():
+      putrand("");
+      break;
+    case():
+      putrand("");
+      break;*/
+     default:
+       putrand("wow, smooches bb");
+       break;
+
+  }
+}
 
  //*****DISPLAY*****
 void display(void)
@@ -232,10 +300,12 @@ void display(void)
     }
 
     glRasterPos2f(500, 500);
-    glutBitmapString(GLUT_BITMAP_TIMES_ROMAN_24, "black people");
+    glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'b');
     glEnd();
   
-    /* flush GL buffers */
+    // flush GL buffers 
+
+    randdel();
 
     glFlush();
 //    glutPostRedisplay();
