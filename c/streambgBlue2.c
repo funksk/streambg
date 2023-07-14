@@ -28,13 +28,11 @@ todo:
 
 TODO:
   Add Params:
+    Ratio of box as an input
+    location of box on screen
     Color
-    Ratio of large box
   Add Text:
     find a library that adds text to this screen
-  Add feature:
-    box XY Util:
-      so taht you can do the speedrunning streamer thing where the window is to the right etc
   
   Create Threading function:
 
@@ -157,7 +155,7 @@ the file will be output (in this case) to: test.mp4
 const unsigned int drwbx = 1;
 const unsigned int movbx = 1;
 const unsigned int drwfrm = 0;
-const unsigned int drwlns = 1;
+const unsigned int drwlns = 0;
 const unsigned int savePhotos = 0;
 
 const int t = 60*10;
@@ -236,14 +234,14 @@ void xyjst(int x, int y, int z, float a[])
   float yy = (float)y/(float)glutGet(GLUT_WINDOW_HEIGHT);
   switch(z)
   {
-    /*
+    
     case 0: //topleft
       a[0] = (xx*(xx+1))-1;
       a[1] = 1;
       a[2] = -1;
       a[3] = (yy*(yy-1))+1;
       break;
-      
+    /*
     case 1: //midleft
       a[0] = ;
       a[1] = ;
@@ -263,6 +261,7 @@ void xyjst(int x, int y, int z, float a[])
       a[3] = ;
       break;
       */
+    default:
     case 4: //centered
       a[0] = xx;  //x1
       a[1] = yy; //y1
@@ -294,6 +293,7 @@ void xyjst(int x, int y, int z, float a[])
       a[2] = ;
       a[3] = -1;
       break;*/
+
       printf("x1 = %f, y1 = %f, x2 = %f, x3 = %f\n",a[0],a[1],a[2],a[3]);
 
   }
@@ -601,7 +601,7 @@ void init()
     f = fopen("debug.txt", "w");
     srand((unsigned int)time(NULL));
     getxy(inbox[0],inbox[1],flbox);
-//    xyjst(inbox[0],inbox[1], 0, flbox);
+    xyjst(inbox[0],inbox[1], 0, flbox);
     xylims = getlims(flbox);
     cur = getlist(xylims);
     next = randlist(xylims, cur);
