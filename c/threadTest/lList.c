@@ -3,6 +3,9 @@
 #include "lList.h"
 #include "types.h"
 
+node *head;
+node *tail;
+
 //tri points & frame number
 void push(tripnts pntsIn, int fNumIn)
 {
@@ -13,7 +16,7 @@ void push(tripnts pntsIn, int fNumIn)
 		x->next = head;
 	}
 	
-	(*head) = *x;
+	head = x;
 
 	x->pts = pntsIn;
 	x->fNum = fNumIn;

@@ -155,7 +155,7 @@ the file will be output (in this case) to: test.mp4
 const unsigned int drwbx = 1;
 const unsigned int movbx = 1;
 const unsigned int drwfrm = 0;
-const unsigned int drwlns = 0;
+const unsigned int drwlns = 1;
 const unsigned int savePhotos = 0;
 
 const int t = 60*10;

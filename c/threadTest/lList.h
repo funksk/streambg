@@ -8,8 +8,9 @@
 #include "types.h"
 
 //internal variables
-node *head;
-node *tail;
+extern node *head;
+extern node *tail;
+
 //tri points & frame number
 //public funcz
 void push(tripnts, int);
