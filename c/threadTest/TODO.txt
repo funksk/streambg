@@ -1,0 +1,79 @@
+ Create Threading function:
+
+    -Reading params in from a text file
+      create text file if does not exist
+      ability to specify the text file from terminal
+    
+    -Create new data types
+      Create linked lists that contain:
+        head
+        tail
+        pointer to next (singly)
+        pointer to an array[][][] of tripnts
+        int frameNum;
+      Create a stack layer to the linked lists
+        push
+          ptr become head
+        pop
+          return head, next becomes head !
+        this should be all that we need...
+
+    -Pre-calculate init function
+      From amount of time, calculate number of frames
+        or let the user specify the frames. who cares
+      Create two linked lists filled with arrays based upon specified triangle points:
+        a "keyframe" array
+        a "working" array per "keyframe" array
+      Create a "keyframe" array of points every x frames based upon an arbitrary value (might have done this already)
+      Calculate the working array from the keyframe arrays to other keyframe arrays
+        the linked list will be beautiful for this
+
+      -Supervisor function:
+        From params, read number of threads to dispatch
+        while(1)
+        {
+          while(threadAvailable == 0)
+          {
+            Wait rand() ms
+          }
+          while(stackNullBlocking);
+          stackNullBlocking = 1;
+          if(stackNull)
+          {
+            stackNullBlocking = 0;
+            wrapUp(); //we have to let the rest of the threads wrap up, but don't dispatch another!
+          }
+          stackNullBlocking = 0;
+          dispatch ONE initThread();
+        }
+      
+      -initThread()
+        while(stackBlocking);
+        stackBlocking = 1;
+        curFrame = popStack();
+        stackBlocking = 0;
+        if(curFrame.arr == null)
+        {
+          while(stackNullBlocking);
+          stackNullBlocking = 1;
+          stackNull = 1;
+          stackNullBlocking = 0;
+        }
+        else
+        {
+          renderOneFrame(*curFrame);
+        }
+
+      -renderOneFrame()
+        read passed vars (make a copy of them)
+        do all GLUT activities
+        save from filename
+        profit
+
+      -wrapUp() //make sure that we let the rest of the children run their course... somehow
+        wait for all mutexes to be out
+        see if final filename exists
+          WAIT 5 SECONDS AFTER THIS FOR RENDERING
+        relieve all RAM locations
+        (run ffmpeg?)
+        exit
