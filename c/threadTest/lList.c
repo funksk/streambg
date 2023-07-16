@@ -19,6 +19,11 @@ void push(tripnts pntsIn, int fNumIn)
 	head = x;
 
 	x->pts = pntsIn;
+	/*DEBUG!!!!!!!!!!! PLS DELETE!!!!!!!!!!!!*/
+	printf("x->pts.lof[0][0] = %0.2f\n", x->pts.lof[0][0][0]);
+	printf("x->pts.lof[0][1] = %0.2f\n", x->pts.lof[0][0][1]);
+	printf("x->pts.lof[1][0] = %0.2f\n", x->pts.lof[0][1][0]);
+	printf("x->pts.lof[1][1] = %0.2f\n", x->pts.lof[0][1][1]);
 	x->fNum = fNumIn;
 }
 

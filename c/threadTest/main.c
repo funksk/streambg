@@ -12,10 +12,12 @@ test for lList.c:
 */
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "lList.h"
 #include "types.h"
 
-#define TRIPNTAMNT 1
+#define TRIPNTAMNT 2
+#define RAMWAITS 0
 
 float randfloat(float Min, float Max)
 {
@@ -69,22 +71,6 @@ tripnts randlist(frame x, tripnts y)
   return z;
 }
 
-void cpyFrameFromNode(tripnts tOut, int fOut, node *in)
-{
-	int i, j, k;
-	for(i = 0;i<=3;i++)
-  	{
-    	for(j = 0;j < NUM-1;j++)
-    	{
-      		for(k = 0;k<=1;k++)
-      		{
-      			tOut.lof[i][j][k] = in->pts.lof[i][j][k];
-      		}
-  		}
-  	}
-  	fOut = in->fNum;
-}
-
 tripnts getlist(frame x)
 {
   tripnts y;
@@ -114,19 +100,53 @@ void printTripnts(tripnts x)
 	int i, j, k;
 
 	for(i = 0;i<=3;i++)
-	  {
-	  	printf("%d:\n",i);
-	    for(j = 0;j < NUM-1;j++)
-	    {
-	    	printf("\t%d:\t[",j);
-	      for(k = 0;k<=1;k++)
-	      {
-	      	printf("%d = %.2f ",k,x.lof[i][j][k]);
-	      }
-	      printf("]\n");
-	  	}
-	  }
-}	
+  {
+  	printf("%d:\n",i);
+    for(j = 0;j < NUM-1;j++)
+    {
+    	printf("\t%d:\t[",j);
+      for(k = 0;k<=1;k++)
+      {
+      	printf("%d = %.2f ",k,x.lof[i][j][k]);
+      }
+      printf("]\n");
+  	}
+  }
+}
+
+unsigned short checkTripnts(tripnts x, tripnts y)
+{
+  int i, j, k;
+  printf("**********In checkTripnts*******\n");
+  printf("x\n");
+  printTripnts(x);
+  printf("y\n");
+  printTripnts(y);
+
+  for(i = 0;i<=3;i++)
+  {
+    for(j = 0;j < NUM-1;j++)
+    {
+      for(k = 0;k<=1;k++)
+      {
+        //printf("%0.2f == %0.2f\n", x.lof[i][j][k], y.lof[i][j][k]);
+        if(x.lof[i][j][k] != y.lof[i][j][k])
+          return 1;
+      }
+    }
+  }
+  return 0;
+}
+
+void cpyTripnts(tripnts *x, tripnts *y)
+{
+  
+  printf("**********In cpyTripnts*******\n");
+
+  memcpy(x,y,sizeof(tripnts));
+
+}
+
 
 int main(int argv, char *argc[])
 {
@@ -135,18 +155,26 @@ int main(int argv, char *argc[])
 	float f[4];
 	node *testPtr;
 	int i, j, k;
+  float testFlts[2] = {0.0};
+  unsigned short flg = 0;
 	frame defaultFrame;
+  char c;
 
 	f[0] = 0.7;
 	f[1] = 0.6;
 	f[2] = -1*f[0];
 	f[3] = -1*f[1];
 
+  //ensure no garbage data
+  for(i=0;i<TRIPNTAMNT;i++)
+  {
+    memset(&test[i],0,sizeof(tripnts));
+    memset(&testVal[i],0,sizeof(tripnts));
+  }
 	//make a nice beautiful frame
 	defaultFrame = frmmkr(f,0.01);
 
 	//generate several tripnts
-
 	for(i=0;i<TRIPNTAMNT;i++)
 	{
 		test[i] = getlist(defaultFrame);
@@ -164,23 +192,62 @@ int main(int argv, char *argc[])
 	}
 	printf("all pushed\n");
 
+  if(RAMWAITS)
+  {
+    printf("check ram (usage), press enter to free & validate...");
+    scanf("%c",&c);
+  }
+
+  printf("getTop() = \n");
+  (testPtr) = getTop();
+  printTripnts(testPtr->pts);
+
+  //testFlts[0] = testPtr->pts.lof[0][0][0];
+  //testFlts[1] = testPtr->pts.lof[0][0][1];
+  
+  printf("testFlts[0] = %.2f, testFlts[1] = %.2f\n",testFlts[0],testFlts[1]);
+
 	//pop all back to us
 	for(i=0;i<TRIPNTAMNT;i++)
 	{
 		(testPtr) = getTop();
 		deleteTop();
-		cpyFrameFromNode(testVal[i],j,testPtr);
+    memcpy(&testVal[i],&testPtr->pts,sizeof(tripnts));
+    testVal[i].lof[0][0][0] = testPtr->pts.lof[0][0][0];
+    testVal[i].lof[0][0][1] = testPtr->pts.lof[0][0][1];
+    //cpyTripnts(&testVal[i], &testPtr->pts);
+		//testVal[i] = testPtr->pts;
 		printf("testVal[%d] = \n", i);
 		printTripnts(testVal[i]);
 	}
 
+  printf("testVal[0] = %.2f, testVal[1] = %.2f\n",testVal[0].lof[0][0][0],testVal[0].lof[0][0][1]);
+  
+  //testVal[0].lof[0][0][0] = testFlts[0];
+  //testVal[0].lof[0][0][1] = testFlts[1];
+
 	printf("all Popped\n");
 
 	//validate that's what we had pushed...
+  //do some weird while loop shit
+  //flip this, use i & j...
+  i = 0;
+  while(i < TRIPNTAMNT && !flg)
+  {
+    flg = checkTripnts(testVal[i], test[i]);
+    ++i;
+  }
+  if(flg)
+    printf("something went wrong in the transfer...\n");
+  else
+    printf("all numbers validated, everything works!\n");
 
 	//validate we had free'd ram
-
-
-
-	return 0;
+  if(RAMWAITS)
+  {
+  printf("check RAM & press enter to quit...");
+  scanf("%c",&c);
+  }
+	
+  return 0;
 }
