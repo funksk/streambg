@@ -3,7 +3,7 @@
 #define TYPES_H
 //********DECLARATIONS****************
 //consts
-#define NUM 27-2    //number of triangles you want in each quadrant*3 (must be multiple of 3 to work right)
+#define NUM 9-2    //number of triangles you want in each quadrant*3 (must be multiple of 3 to work right)
 
 #define fps 30;
 #define uplims 15; //upper limit in seconds... this is not seconds idk
