@@ -1,5 +1,16 @@
+/*
+~~Stream Background Project~~
+lList.h lList.c
+by Andrew Yankovich
+Document Created on 14-JUL-2023
+Last edited 16-JUL-2023
+
+see lList.h for a detailed description.
+google "singly linked list" if this code confuses you.
+*/
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "lList.h"
 #include "types.h"
 
@@ -19,11 +30,6 @@ void push(tripnts pntsIn, int fNumIn)
 	head = x;
 
 	x->pts = pntsIn;
-	/*DEBUG!!!!!!!!!!! PLS DELETE!!!!!!!!!!!!*/
-	printf("x->pts.lof[0][0] = %0.2f\n", x->pts.lof[0][0][0]);
-	printf("x->pts.lof[0][1] = %0.2f\n", x->pts.lof[0][0][1]);
-	printf("x->pts.lof[1][0] = %0.2f\n", x->pts.lof[0][1][0]);
-	printf("x->pts.lof[1][1] = %0.2f\n", x->pts.lof[0][1][1]);
 	x->fNum = fNumIn;
 }
 
@@ -43,12 +49,26 @@ void append(tripnts pntsIn, int fNumIn)
 	y->next = x;
 }
 
-node *getTop()
+node *popHead()
 {
 	return head;
 }
 
-void deleteTop(void)
+/*
+//does not work...
+node *getTopDeep()
+{
+	printf("1\n");
+	node *x = malloc(sizeof(node));
+	printf("2\n");
+	memcpy(&x, &head, sizeof(node));
+	printf("3\n");
+	printf("%.2f\n",x->pts.lof[0][0][0]);
+	return x;
+}
+*/
+
+void deleteHead(void)
 {
 	node *x = malloc(sizeof(node));
 

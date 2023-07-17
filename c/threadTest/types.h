@@ -1,4 +1,18 @@
+/*
+~~Stream Background Project~~
+types.h
+by Andrew Yankovich
+Document Created on 14-JUL-2023
+Last edited 16-JUL-2023
 
+Description:
+This document defines our custom data
+types specific to this project.
+
+Mostly structs containing arrays, as
+passing these without structs suckts!
+
+*/
 #ifndef TYPES_H
 #define TYPES_H
 //********DECLARATIONS****************
@@ -24,6 +38,11 @@ typedef struct n {
 	tripnts pts;
 	int fNum;	//frame number
 } node;
+
+typedef struct
+{
+
+} config;
 
 
 #endif
