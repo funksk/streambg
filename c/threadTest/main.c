@@ -28,6 +28,23 @@ Should do the following in order:
 
 int main()
 {
-	
+	config mainConfig;
+	mainConfig = parseFile();
+	if(mainConfig.exit == 1)
+	{
+		printf("take a look at config.ini!\n");
+		return(0);
+	}
+	else if(mainConfig.exit == 2)
+	{
+		perror("could not make config.ini. Check your permissions in this folder?\n");
+		return(1);
+	}
+	else if (mainConfig.exit == 3)
+	{
+		perror("config.ini was corrupted!\n");
+		return(1);
+	}
+
 	return 0;
 }

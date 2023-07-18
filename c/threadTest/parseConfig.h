@@ -1,6 +1,6 @@
 /*
 ~~Stream Background Project~~
-main.c
+parseConfig.h parseConfig.c
 by Andrew Yankovich
 Document Created on 16-JUL-2023
 Last edited 16-JUL-2023
@@ -14,8 +14,9 @@ if not, creates default config file & exits w/ a zero (?)
 #define PCONFIG_H
 #include "types.h"
 
+int getfromf(char* x, FILE* f, int debug);
 config parseFile(void);
 config setDefaults(void);
-void createFile(char*);
+void createAndWriteFile(config);
 
 #endif
