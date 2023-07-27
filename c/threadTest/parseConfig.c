@@ -65,33 +65,42 @@ int getfromf(char* x, FILE* f, int debug)
     return 0;
 }
 
-unsigned short validate(char[] inBuffer, char[] validateStr, int len)
+void printCurConfig(config in)
+{
+	printf("in.drwbx = %d\n",in.drwbx);		//draw our box in the middle
+	printf("in.movbx = %d\n", in.movbx);		//don't let them move the box? (shouldn't really exist)
+	printf("in.drwfrm = %d\n", in.drwfrm);		//no frame...
+	printf("in.drwlns = %d\n",in.drwlns);		//pls draw the lines
+	printf("in.lineSize = %0.2f\n",in.lineSize);	//nice fuzzy lines :)
+	printf("in.maxIter = %d\n",in.maxIter); //30*2
+	printf("in.baseDir = %s\n", in.baseDir);	//for our nice VM stuff
+	printf("in.color[0] = %0.3f\n",in.color[0]);	//nice 
+	printf("in.color[1] = %0.3f\n",in.color[1]);	//blue
+	printf("in.color[2] = %0.3f\n",in.color[2]);	//color :)
+}
+
+unsigned short validate(char inBuffer[], char validateStr[], int len)
 {
 	unsigned short ret = 0;
-	char[] tempstr;
+	char tempstr[255];
 	strcpy(tempstr,inBuffer);
 	tempstr[len] = '\0';
 	if(strcmp(tempstr,validateStr) != 0)
 		ret = 3;
 	return ret;
 }
-fprintf(f, "drawlines=%d", in.drwlns);
-		fprintf(f, "lineSize=%0.1f", in.lineSize);
-		fprintf(f, "lengthInSeconds=%d", 2);
-		fprintf(f, "baseDir=\"%s\"", in.baseDir);
-		fprintf(f, "colorFloat1=%0.3f", in.color[0]);
-		fprintf(f, "colorFloat2=%0.3f", in.color[1]);
-		fprintf(f, "colorFloat3=%0.3f", in.color[2]);
+
 config parseFile(void)
 {
 	FILE *f;
 	config ret;
-	char[255] inBuffer;
+	char inBuffer[255];
 	char *configCheck[] = {"drawbox=", "movebox=","drawframe=","drawlines=","lineSize=","lengthInSeconds=","baseDir=","colorFloat1=","colorFloat2=","colorFloat3="};
 	char configStrs[10][255];
 	int chckf = 0;
 	int i = 0;
 	int j, k;
+	printf("hello1\n");
 	if((f = fopen("config.ini", "r")) == NULL)
 	{
 		//set the defaults, make the file, be done with the program!
@@ -100,13 +109,14 @@ config parseFile(void)
 	}
 	else
 	{	//parse the file
-		while(i < 10 && !ret)
+		printf("hello2\n");
+		while(i < 10)
 		{
 			if((getfromf(inBuffer,f,0)) != 0)	//drwbx
-				ret = 3;
+				ret.exit = 3;	
 			else
 			{
-				if(ret = validate(inBuffer, configCheck[i], strlen(configCheck[i])) != 3)
+				if((ret.exit = validate(inBuffer, configCheck[i], strlen(configCheck[i]))) != 3)
 				{
 					//copy the string over
 					j=strlen(configCheck[i]);
@@ -124,8 +134,19 @@ config parseFile(void)
 			}
 			i++;
 		}
+		fclose(f);
+		//parse each string got
+		ret.drwbx = atoi(configStrs[0]);		//draw our box in the middle
+		ret.movbx = atoi(configStrs[1]);		//don't let them move the box? (shouldn't really exist)
+		ret.drwfrm = atoi(configStrs[2]);		//no frame...
+		ret.drwlns = atoi(configStrs[3]);		//pls draw the lines
+		ret.lineSize = atof(configStrs[4]);	//nice fuzzy lines :)
+		ret.maxIter = atoll(configStrs[5]); //30*2
+		strcpy(ret.baseDir, configStrs[6]);	//for our nice VM stuff
+		ret.color[0] = atof(configStrs[7]);	//nice 
+		ret.color[1] = atof(configStrs[8]);	//blue
+		ret.color[2] = atof(configStrs[9]);	//color :)
 	}
-	fclose(f);
 	return ret;
 }
 
@@ -150,24 +171,26 @@ int createAndWriteFile(config in)
 {
 	FILE *f;
 	int ret = 1;
+	printf("in createAndWriteFile\n");
 	if((f = fopen("config.ini","w")) == NULL)
 	{
 		ret = 2;
 	}
 	else
 	{
-		fprintf(f, "drawbox=%d", in.drwbx);
-		fprintf(f, "movebox=%d", in.movbx);
-		fprintf(f, "drawframe=%d", in.drwfrm);
-		fprintf(f, "drawlines=%d", in.drwlns);
-		fprintf(f, "lineSize=%0.1f", in.lineSize);
-		fprintf(f, "lengthInSeconds=%d", 2);
-		fprintf(f, "baseDir=\"%s\"", in.baseDir);
-		fprintf(f, "colorFloat1=%0.3f", in.color[0]);
-		fprintf(f, "colorFloat2=%0.3f", in.color[1]);
-		fprintf(f, "colorFloat3=%0.3f", in.color[2]);
+		fprintf(f, "drawbox=%d\n", in.drwbx);
+		fprintf(f, "movebox=%d\n", in.movbx);
+		fprintf(f, "drawframe=%d\n", in.drwfrm);
+		fprintf(f, "drawlines=%d\n", in.drwlns);
+		fprintf(f, "lineSize=%0.1f\n", in.lineSize);
+		fprintf(f, "lengthInSeconds=%d\n", 2);
+		fprintf(f, "baseDir=\"%s\"\n", in.baseDir);
+		fprintf(f, "colorFloat1=%0.3f\n", in.color[0]);
+		fprintf(f, "colorFloat2=%0.3f\n", in.color[1]);
+		fprintf(f, "colorFloat3=%0.3f\n", in.color[2]);
 	}
 	fclose(f);
+	printf("leaving creatandriwirtfile\n");
 	return ret;
 }
 

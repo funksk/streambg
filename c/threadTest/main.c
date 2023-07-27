@@ -25,14 +25,17 @@ Should do the following in order:
 #include "types.h"
 #include "lList.h"
 #include "parseConfig.h"
+#include "init.h"
 
 int main()
 {
 	config mainConfig;
+	node *mainPtr;
+	//config logic
 	mainConfig = parseFile();
 	if(mainConfig.exit == 1)
 	{
-		printf("take a look at config.ini!\n");
+		printf("wrote config.ini defaults\n");
 		return(0);
 	}
 	else if(mainConfig.exit == 2)
@@ -45,6 +48,11 @@ int main()
 		perror("config.ini was corrupted!\n");
 		return(1);
 	}
+
+	printCurConfig(mainConfig);
+
+	//init
+	mainPtr = initSequence(config);
 
 	return 0;
 }

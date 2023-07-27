@@ -17,6 +17,8 @@ if not, creates default config file & exits w/ a zero (?)
 int getfromf(char* x, FILE* f, int debug);
 config parseFile(void);
 config setDefaults(void);
-void createAndWriteFile(config);
+void printCurConfig(config);
+unsigned short validate(char[], char[], int);
+int createAndWriteFile(config);
 
 #endif

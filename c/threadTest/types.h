@@ -24,6 +24,7 @@ passing these without structs suckts!
 #define t 60*10;
 #define dt  0;
 #define uplimf fps*uplims;
+#define TRIPNTBUFF 2042
 
 
 typedef struct
@@ -31,7 +32,7 @@ typedef struct
     float lof[4][NUM][2]; //0 = left, 1 = bottom, 2 = top, 3 = right
 } tripnts;
 
-typedef struct 
+typedef struct
 {
   float pts[4][4];
 } frame;
@@ -49,7 +50,7 @@ typedef struct
 	unsigned int drwfrm;	//default 0
 	unsigned int drwlns;	//default 1
 	float lineSize;			//default 2.0 (for fuzzier lines)
-	unsigned long maxIter; 	//30 * seconds * minutes * hours
+	long long maxIter; 	//30 * seconds * minutes * hours
 	char baseDir[255];		//default "/mnt/hgfs/VM_swap/" because...
 	float color[3];			//default 0.241, 0.139, 0.61
 	unsigned short exit;	//do we exit or not?
